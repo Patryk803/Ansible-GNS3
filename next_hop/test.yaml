@@ -1,0 +1,21 @@
+---
+- name: Run commands on remote LAB devices
+  hosts: all
+  connection: local
+  gather_facts: no
+  pre_tasks:
+    - include_vars: "/home/patryk/Ansible-GNS3/global_mode_command/yaml_demo.yaml"
+
+  tasks:
+    - name: Configure device hostname from lines
+      eos_config:
+        provider:
+            host: "{{ inventory_hostname }}"
+            username: "{{ USERNAME }}"
+            password: "{{ DEVICE_PASSWORD }}"
+            use_ssl: no
+            authorize: yes
+            transport: cli
+        lines:
+          - "hostname {{inventory_hostname}}-ansible"
+          - "ntp server 1.1.1.1"

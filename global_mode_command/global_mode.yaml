@@ -1,0 +1,42 @@
+---
+# Here we basically moving username and password to yaml_demo
+
+- name: Take global command
+  hosts: S1
+  connection: local
+  gather_facts: no
+  vars_files:
+    - /home/patryk/Ansible-GNS3/global_mode_command/yaml_demo.yaml
+#./yaml_demo.yaml - if it's in the same location
+
+  vars_prompt:
+   # - name: USERNAME
+   #   prompt: "Please put your username"
+   #   private: no
+   # - name: DEVICE_PASSWORD
+   #   prompt: "Please put your password"
+   #   private: yes
+
+
+    - name: NEXT_HOP
+      prompt: "Please enter the IP of the Next HOP"
+      private: no
+
+
+  tasks:
+  - name: INPUT SHOW COMMAND TO DEVICES
+    eos_config:
+      provider:
+        host: "{{ inventory_hostname }}"
+        username: "{{ USERNAME }}"
+        password: "{{ DEVICE_PASSWORD }}"
+        use_ssl: no
+        authorize: yes
+        transport: cli
+      lines:
+        - "ip route 0.0.0.0/0 {{ NEXT_HOP }}"
+  #  register: print_output
+
+#  - name: OUTPUT SHOW COMMAND to SCREEN
+  #  debug:
+  #    msg: "{{ print_output.stdout_lines }}"
